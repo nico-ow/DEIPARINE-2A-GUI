@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 31, 2025 at 06:32 PM
+-- Generation Time: Jun 02, 2025 at 05:05 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -40,8 +40,8 @@ CREATE TABLE `area_tbl` (
 --
 
 INSERT INTO `area_tbl` (`a_id`, `a_name`, `a_rate`, `a_location`, `a_status`) VALUES
-(1, 'A1', 100, 'Lower Ground', 'Available\r\n'),
-(3, 'A2', 100, 'Lower Ground', 'Available');
+(5, 'A1', 100, 'Lower Ground', 'Occupied'),
+(6, 'A2', 100, 'Lower Ground', 'Available');
 
 -- --------------------------------------------------------
 
@@ -182,7 +182,26 @@ INSERT INTO `tbl_logs` (`log_id`, `user_name`, `action`, `log_time`) VALUES
 (133, 'deiparine@gmail.com', 'Admin logged in', '2025-05-31 15:36:13'),
 (134, 'janley@gmail.com', 'Tollier logged in', '2025-05-31 15:40:15'),
 (135, 'janley@gmail.com', 'Tollier logged in', '2025-05-31 15:41:23'),
-(136, 'deiparine@gmail.com', 'Admin logged in', '2025-05-31 16:26:35');
+(136, 'deiparine@gmail.com', 'Admin logged in', '2025-05-31 16:26:35'),
+(137, 'deiparine@gmail.com', 'Admin logged in', '2025-05-31 16:43:07'),
+(138, 'deiparine@gmail.com', 'Admin logged in', '2025-06-01 01:32:40'),
+(139, 'janley@gmail.com', 'Tollier logged in', '2025-06-01 01:36:53'),
+(140, 'janley@gmail.com', 'Tollier logged in', '2025-06-01 01:40:38'),
+(141, 'janley@gmail.com', 'Tollier logged in', '2025-06-01 04:10:29'),
+(142, 'deiparine@gmail.com', 'Admin logged in', '2025-06-01 08:50:11'),
+(143, 'janley@gmail.com', 'Tollier logged in', '2025-06-01 08:50:33'),
+(144, 'janley@gmailc.om', 'Failed login attempt', '2025-06-01 08:52:58'),
+(145, 'janley@gmail.com', 'Tollier logged in', '2025-06-01 08:53:06'),
+(146, 'nicodeiparine@gmail.com', 'Failed login attempt', '2025-06-01 08:54:42'),
+(147, 'janley@gmail.com', 'Tollier logged in', '2025-06-01 08:54:51'),
+(148, 'deiparine@gmail.com', 'Admin logged in', '2025-06-01 09:00:57'),
+(149, 'deiparine@gmail.com', 'Admin logged in', '2025-06-01 10:07:04'),
+(150, 'janley@gmail.com', 'Tollier logged in', '2025-06-01 10:08:23'),
+(151, 'deiparine@gmail.com', 'Admin logged in', '2025-06-01 10:10:05'),
+(152, 'janley@gmail.com', 'Tollier logged in', '2025-06-01 10:13:04'),
+(153, 'janley@gmail.com', 'Tollier logged in', '2025-06-01 10:13:34'),
+(154, 'deiparine@gmail.com', 'Admin logged in', '2025-06-01 10:14:50'),
+(155, 'deiparine@gmail.com', 'Added a new account with email: angel@gmail.com', '2025-06-01 10:16:12');
 
 -- --------------------------------------------------------
 
@@ -237,8 +256,7 @@ CREATE TABLE `transactions` (
 --
 
 INSERT INTO `transactions` (`t_id`, `a_id`, `customer_name`, `car_plate`, `contact_number`, `hours`, `total_due`, `transaction_time`, `status`) VALUES
-(1, 1, 'Nico Deiparine', 'SDH12', '09665214786', 3, 300, '2025-05-31 14:04:07', 'Paid'),
-(2, 3, 'Janley Deiparine', 'SFD1L', '09665214786', 3, 300, '2025-05-31 15:30:58', 'paid');
+(5, 5, 'Nico Deiparine', 'SH2WK', '09665214786', 4, 400, '2025-06-01 10:09:30', 'pending');
 
 --
 -- Indexes for dumped tables
@@ -277,13 +295,13 @@ ALTER TABLE `transactions`
 -- AUTO_INCREMENT for table `area_tbl`
 --
 ALTER TABLE `area_tbl`
-  MODIFY `a_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `a_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `tbl_logs`
 --
 ALTER TABLE `tbl_logs`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=137;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=156;
 
 --
 -- AUTO_INCREMENT for table `tbl_user`
@@ -295,7 +313,7 @@ ALTER TABLE `tbl_user`
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `t_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `t_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables
