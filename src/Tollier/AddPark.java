@@ -209,7 +209,7 @@ public class AddPark extends javax.swing.JFrame {
     }//GEN-LAST:event_plateActionPerformed
 
     private void addMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addMouseClicked
-       String name = cs_name.getText().trim();
+     String name = cs_name.getText().trim();
     String contact = cs_contact.getText().trim();
     String plateNumber = plate.getText().trim();
     String hourText = hours.getText().trim();
@@ -232,11 +232,19 @@ public class AddPark extends javax.swing.JFrame {
     try {
         connectDB db = new connectDB();
 
-        // Get rate from area_tbl using selectedAreaId
-        String rateQuery = "SELECT a_rate FROM area_tbl WHERE a_id = " + selectedAreaId;
-        ResultSet rs = db.getData(rateQuery);
+        // Check if selected area is available and get the rate
+        String areaQuery = "SELECT a_rate, a_status FROM area_tbl WHERE a_id = ?";
+        PreparedStatement areaStmt = db.connect.prepareStatement(areaQuery);
+        areaStmt.setInt(1, Integer.parseInt(selectedAreaId));
+        ResultSet rs = areaStmt.executeQuery();
+        
         int rate = 0;
         if (rs.next()) {
+            String status = rs.getString("a_status");
+            if ("Occupied".equalsIgnoreCase(status)) {
+                JOptionPane.showMessageDialog(this, "The selected area is already occupied. Please choose a different area.", "Area Occupied", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
             rate = rs.getInt("a_rate");
         } else {
             JOptionPane.showMessageDialog(this, "Selected area not found.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -245,7 +253,7 @@ public class AddPark extends javax.swing.JFrame {
 
         int total_due = rate * hoursVal;
 
-        // Insert transaction into database
+        // Insert transaction
         String insertQuery = "INSERT INTO transactions (a_id, customer_name, car_plate, contact_number, hours, total_due, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement pst = db.connect.prepareStatement(insertQuery);
         pst.setInt(1, Integer.parseInt(selectedAreaId));
@@ -259,7 +267,13 @@ public class AddPark extends javax.swing.JFrame {
         int result = pst.executeUpdate();
 
         if (result > 0) {
-            JOptionPane.showMessageDialog(this, "Transaction added successfully.");
+            // Update area status to 'occupied'
+            String updateStatusQuery = "UPDATE area_tbl SET a_status = 'Occupied' WHERE a_id = ?";
+            PreparedStatement updateStmt = db.connect.prepareStatement(updateStatusQuery);
+            updateStmt.setInt(1, Integer.parseInt(selectedAreaId));
+            updateStmt.executeUpdate();
+
+            JOptionPane.showMessageDialog(this, "Transaction added successfully. Area marked as occupied.");
             this.dispose(); // Close the current input form
             new TollierDB().setVisible(true); // Reopen the dashboard
         } else {
