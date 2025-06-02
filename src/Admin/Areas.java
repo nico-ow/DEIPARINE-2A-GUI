@@ -456,9 +456,7 @@ try {
     }//GEN-LAST:event_usersMouseClicked
 
     private void areasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_areasMouseClicked
-        Users go = new Users();
-        go.setVisible(true);
-        this.dispose();
+        
     }//GEN-LAST:event_areasMouseClicked
 
     private void dashboardMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dashboardMouseClicked

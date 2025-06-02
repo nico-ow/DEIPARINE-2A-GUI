@@ -345,9 +345,7 @@ public class Account extends javax.swing.JFrame {
     }//GEN-LAST:event_dashboardMouseClicked
 
     private void accountMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_accountMouseClicked
-       Account go = new Account();
-       go.setVisible(true);
-       this.dispose();
+      
     }//GEN-LAST:event_accountMouseClicked
 
     private void changeprofileMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changeprofileMouseClicked

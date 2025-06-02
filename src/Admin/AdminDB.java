@@ -350,9 +350,7 @@ public class AdminDB extends javax.swing.JFrame {
     }//GEN-LAST:event_areasMouseClicked
 
     private void dashboardMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dashboardMouseClicked
-       AdminDB go = new AdminDB();
-       go.setVisible(true);
-       this.dispose();
+       
     }//GEN-LAST:event_dashboardMouseClicked
 
     /**
