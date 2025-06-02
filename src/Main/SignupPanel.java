@@ -464,50 +464,45 @@ public class SignupPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_answerActionPerformed
 
     private void signupMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_signupMouseClicked
-        if (signUpValidation()) {
-    connectDB con = new connectDB();
-    hasher hasher = new hasher();
+       if (signUpValidation()) {
+        connectDB con = new connectDB();
+        hasher hasher = new hasher();
 
-    // Hash the password before storing it
-    String hashedPassword = hasher.hashPassword(password.getText());
+        
+        String hashedPassword = hasher.hashPassword(password.getText());
 
-    // Get selected question from the JComboBox
-    String selectedQuestion = question.getSelectedItem().toString();
+        
+        String selectedQuestion = question.getSelectedItem().toString();
+        String answerText = new String(answer.getPassword());
+        String hashedAnswer = hasher.hashPassword(answerText); // Hash the answer
 
-    // Get the answer entered by the user
-    String answerText = new String(answer.getPassword());
+        
+        String query = "INSERT INTO tbl_user (u_firstname, u_lastname, u_email, u_contactnumber, u_hashpw, u_question, u_answer, u_type, u_status) " +
+                       "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    // SQL query using PreparedStatement to avoid SQL injection
-    String query = "INSERT INTO tbl_user (u_firstname, u_lastname, u_email, u_contactnumber, u_hashpw, u_question, u_answer, u_type, u_status) " +
-                   "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = con.getConnection().prepareStatement(query)) {
+            ps.setString(1, firstname.getText());
+            ps.setString(2, lastname.getText());
+            ps.setString(3, email.getText());
+            ps.setString(4, contactnumber.getText());
+            ps.setString(5, hashedPassword);
+            ps.setString(6, selectedQuestion);
+            ps.setString(7, hashedAnswer); //
+            ps.setString(8, "Tollier");
+            ps.setString(9, "Pending");
 
-    try (PreparedStatement ps = con.getConnection().prepareStatement(query)) {
-        ps.setString(1, firstname.getText()); // First name
-        ps.setString(2, lastname.getText());  // Last name
-        ps.setString(3, email.getText());     // Email
-        ps.setString(4, contactnumber.getText()); // Contact number
-        ps.setString(5, hashedPassword);      // Hashed password
-        ps.setString(6, selectedQuestion);    // Selected security question
-        ps.setString(7, answerText);          // Security question answer
-        ps.setString(8, "Tollier");          // Type (hardcoded as 'Employee')
-        ps.setString(9, "Pending");           // Status (hardcoded as 'Pending')
+            ps.executeUpdate();
 
-        // Execute the update
-        ps.executeUpdate();
-
-        JOptionPane.showMessageDialog(this, "Registration successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
-
-        // Redirect to login
-        LoginPanel lg = new LoginPanel();
-        lg.setVisible(true);
-        this.dispose();
-    } catch (SQLException e) {
-        JOptionPane.showMessageDialog(this, "Error while registering: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Registration successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            LoginPanel lg = new LoginPanel();
+            lg.setVisible(true);
+            this.dispose();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error while registering: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    } else {
+        JOptionPane.showMessageDialog(this, "Sign up error. Please fill all required fields.", "Warning", JOptionPane.WARNING_MESSAGE);
     }
-} else {
-    JOptionPane.showMessageDialog(this, "Sign up error. Please fill all required fields.", "Warning", JOptionPane.WARNING_MESSAGE);
-}
-
     }//GEN-LAST:event_signupMouseClicked
 
     private void signupMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_signupMouseEntered

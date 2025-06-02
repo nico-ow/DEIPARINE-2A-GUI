@@ -16,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import Main.LoginPanel;
+import config.hasher;
 /**
  *
  * @author mendo
@@ -493,9 +494,14 @@ public class AddAccount extends javax.swing.JFrame {
             // Get the selected item from the type dropdown
             String selectedType = role.getSelectedItem().toString();
 
-            con.insertData("INSERT INTO tbl_user (u_firstname, u_lastname, u_email, u_contactnumber, u_hashpw, u_type, u_status) " +
-                "VALUES ('" + firstname.getText() + "','" + lastname.getText() + "','" + email.getText() + "'," +
-                "'" + contactnumber.getText() + "','" + password.getText() + "', '" + selectedType + "', 'Pending')");
+            String defaultQuestion = "What is your favorite color?";
+            String defaultAnswer = "blue"; 
+            String hashedAnswer = hasher.hashPassword(defaultAnswer);
+
+con.insertData("INSERT INTO tbl_user (u_firstname, u_lastname, u_email, u_contactnumber, u_hashpw, u_type, u_status, u_question, u_answer) " +
+    "VALUES ('" + firstname.getText() + "','" + lastname.getText() + "','" + email.getText() + "'," +
+    "'" + contactnumber.getText() + "','" + password.getText() + "', '" + selectedType + "', 'Pending'," +
+    "'" + defaultQuestion + "', '" + hashedAnswer + "')");
 
             // ✅ Log the account creation (email only)
             session sess = session.getInstance();
