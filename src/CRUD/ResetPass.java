@@ -5,7 +5,9 @@
  */
 package CRUD;
 
+import static Admin.SecretQuestion.hashSecretAnswer;
 import Admin.Users;
+import Forgotpass.ForgotPass;
 import Main.LoginPanel;
 import config.connectDB;
 import config.hasher;
@@ -168,43 +170,45 @@ public class ResetPass extends javax.swing.JFrame {
 
     private void submitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_submitMouseClicked
         String userAnswer = answer.getText().trim();
-        String newPassword = password.getText().trim();
+    String newPassword = password.getText().trim();
 
-        // Step 1: Check if the answer is correct
-        if (!userAnswer.equals(correctAnswer)) {
-            JOptionPane.showMessageDialog(this, "Incorrect answer to security question.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
+    // ✅ Step 1: Hash user input before comparing to stored hashed answer
+    String hashedUserAnswer = hashSecretAnswer(userAnswer);
+
+    if (!hashedUserAnswer.equals(correctAnswer)) {
+        JOptionPane.showMessageDialog(this, "Incorrect answer to security question.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Step 2: Validate new password
+    if (newPassword.isEmpty() || newPassword.length() < 6) {
+        JOptionPane.showMessageDialog(this, "Password must be at least 6 characters long.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // ✅ Step 3: Hash the new password
+    String hashedPassword = hasher.hashPassword(newPassword); // assuming you have this hasher class
+
+    // Step 4: Update password in database
+    try (Connection conn = connectDB.getConnection()) {
+        String sql = "UPDATE tbl_user SET u_hashpw = ? WHERE u_email = ?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1, hashedPassword); // hashed password
+        stmt.setString(2, userIdentifier); // email of user
+
+        int rowsUpdated = stmt.executeUpdate();
+        if (rowsUpdated > 0) {
+            JOptionPane.showMessageDialog(this, "Password successfully updated!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            LoginPanel acc = new LoginPanel();
+            acc.setVisible(true);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Failed to update password.", "Error", JOptionPane.ERROR_MESSAGE);
         }
-
-        // Step 2: Validate the new password (add your own validation rules here)
-        if (newPassword.isEmpty() || newPassword.length() < 6) {
-            JOptionPane.showMessageDialog(this, "Password must be at least 6 characters long.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        // Step 3: Hash the new password using the hasher class
-        String hashedPassword = hasher.hashPassword(newPassword);
-
-        // Step 4: Update the password in the database
-        try (Connection conn = connectDB.getConnection()) {
-            String sql = "UPDATE tbl_user SET u_hashpw = ? WHERE u_email = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, hashedPassword); // Set the hashed password
-            stmt.setString(2, userIdentifier); // Use userIdentifier to find the user
-
-            int rowsUpdated = stmt.executeUpdate();
-            if (rowsUpdated > 0) {
-                JOptionPane.showMessageDialog(this, "Password successfully updated!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                LoginPanel acc = new LoginPanel();
-                acc.setVisible(true);
-                this.dispose(); // Close the form after success
-            } else {
-                JOptionPane.showMessageDialog(this, "Failed to update password.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error updating password.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error updating password.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
     }//GEN-LAST:event_submitMouseClicked
 
     private void submitMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_submitMouseEntered
@@ -216,7 +220,7 @@ public class ResetPass extends javax.swing.JFrame {
     }//GEN-LAST:event_submitMouseExited
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
-        Users go = new Users();
+        ForgotPass go = new ForgotPass();
         go.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel4MouseClicked

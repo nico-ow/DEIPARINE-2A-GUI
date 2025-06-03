@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
  * @author Administrator
  */
 public class connectDB {
-
+    public static String loggedInEmail;
     public Connection connect;
     private static final String DB_URL = "jdbc:mysql://localhost:3306/deiparine";
     private static final String DB_USER = "root";

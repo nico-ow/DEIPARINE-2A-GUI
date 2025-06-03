@@ -95,6 +95,9 @@ public class Account extends javax.swing.JFrame {
         role = new javax.swing.JLabel();
         name = new javax.swing.JLabel();
         profilepic = new javax.swing.JLabel();
+        updatequestion = new javax.swing.JPanel();
+        jPanel8 = new javax.swing.JPanel();
+        jLabel23 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -253,6 +256,31 @@ public class Account extends javax.swing.JFrame {
         profilepic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/project-manager (2).png"))); // NOI18N
         jPanel1.add(profilepic, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 70, 90, 100));
 
+        updatequestion.setBackground(new java.awt.Color(173, 216, 230));
+        updatequestion.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                updatequestionMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                updatequestionMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                updatequestionMouseExited(evt);
+            }
+        });
+        updatequestion.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel8.setBackground(new java.awt.Color(173, 216, 230));
+        jPanel8.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        updatequestion.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 190, 100, 40));
+
+        jLabel23.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel23.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel23.setText("SECRET QUESTION");
+        updatequestion.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(26, 10, -1, -1));
+
+        jPanel1.add(updatequestion, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 420, 150, 30));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -379,6 +407,20 @@ public class Account extends javax.swing.JFrame {
         transaction.setBackground(lightBlue);
     }//GEN-LAST:event_transactionMouseExited
 
+    private void updatequestionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updatequestionMouseClicked
+       SecretQuestion go = new SecretQuestion();
+       go.setVisible(true);
+       this.dispose();
+    }//GEN-LAST:event_updatequestionMouseClicked
+
+    private void updatequestionMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updatequestionMouseEntered
+        updatequestion.setBackground(lightGray);
+    }//GEN-LAST:event_updatequestionMouseEntered
+
+    private void updatequestionMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updatequestionMouseExited
+        updatequestion.setBackground(lightBlue);
+    }//GEN-LAST:event_updatequestionMouseExited
+
     /**
      * @param args the command line arguments
      */
@@ -426,16 +468,19 @@ public class Account extends javax.swing.JFrame {
     private javax.swing.JLabel email;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JLabel logout;
     private javax.swing.JLabel name;
     private javax.swing.JLabel none;
     private javax.swing.JLabel profilepic;
     private javax.swing.JLabel role;
     private javax.swing.JPanel transaction;
+    private javax.swing.JPanel updatequestion;
     // End of variables declaration//GEN-END:variables
 }

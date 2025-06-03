@@ -68,10 +68,13 @@ public static int loggedInUserId;
     try {
         String query = "SELECT u_id, u_firstname, u_lastname, u_email, u_contactnumber, u_type, u_status FROM tbl_user WHERE u_email = ?";
         PreparedStatement pstmt = con.getConnection().prepareStatement(query);
-        pstmt.setString(1, email.trim()); // Set email as the query parameter
+        pstmt.setString(1, email.trim());
         ResultSet resultSet = pstmt.executeQuery();
 
         if (resultSet.next()) {
+            // ✅ Now safe to get values from resultSet
+            connectDB.loggedInEmail = resultSet.getString("u_email");
+
             return new String[]{
                 resultSet.getString("u_id").trim(),
                 resultSet.getString("u_firstname").trim(),
@@ -85,7 +88,7 @@ public static int loggedInUserId;
     } catch (SQLException ex) {
         ex.printStackTrace();
     }
-    return null; // Return null if no user is found
+    return null;
 }
     /**
      * This method is called from within the constructor to initialize the form.

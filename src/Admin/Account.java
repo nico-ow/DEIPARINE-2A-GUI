@@ -91,12 +91,15 @@ public class Account extends javax.swing.JFrame {
         email = new javax.swing.JLabel();
         cnum = new javax.swing.JLabel();
         role = new javax.swing.JLabel();
-        changeprofile = new javax.swing.JPanel();
+        updatequestion = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         jLabel21 = new javax.swing.JLabel();
         changepassword = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         jLabel22 = new javax.swing.JLabel();
+        changeprofile = new javax.swing.JPanel();
+        jPanel8 = new javax.swing.JPanel();
+        jLabel23 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -225,30 +228,30 @@ public class Account extends javax.swing.JFrame {
         role.setText("Role");
         jPanel1.add(role, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 230, 540, 40));
 
-        changeprofile.setBackground(new java.awt.Color(173, 216, 230));
-        changeprofile.addMouseListener(new java.awt.event.MouseAdapter() {
+        updatequestion.setBackground(new java.awt.Color(173, 216, 230));
+        updatequestion.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                changeprofileMouseClicked(evt);
+                updatequestionMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                changeprofileMouseEntered(evt);
+                updatequestionMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                changeprofileMouseExited(evt);
+                updatequestionMouseExited(evt);
             }
         });
-        changeprofile.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        updatequestion.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel6.setBackground(new java.awt.Color(173, 216, 230));
         jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        changeprofile.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 190, 100, 40));
+        updatequestion.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 190, 100, 40));
 
         jLabel21.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel21.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel21.setText("CHANGE PROFILE");
-        changeprofile.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(26, 10, -1, -1));
+        jLabel21.setText("SECRET QUESTION");
+        updatequestion.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(26, 10, -1, -1));
 
-        jPanel1.add(changeprofile, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 420, 150, 30));
+        jPanel1.add(updatequestion, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 420, 150, 30));
 
         changepassword.setBackground(new java.awt.Color(173, 216, 230));
         changepassword.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -274,6 +277,31 @@ public class Account extends javax.swing.JFrame {
         changepassword.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(19, 10, -1, -1));
 
         jPanel1.add(changepassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 420, 150, 30));
+
+        changeprofile.setBackground(new java.awt.Color(173, 216, 230));
+        changeprofile.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                changeprofileMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                changeprofileMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                changeprofileMouseExited(evt);
+            }
+        });
+        changeprofile.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel8.setBackground(new java.awt.Color(173, 216, 230));
+        jPanel8.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        changeprofile.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 190, 100, 40));
+
+        jLabel23.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel23.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel23.setText("CHANGE PROFILE");
+        changeprofile.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(26, 10, -1, -1));
+
+        jPanel1.add(changeprofile, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 420, 150, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -348,42 +376,19 @@ public class Account extends javax.swing.JFrame {
       
     }//GEN-LAST:event_accountMouseClicked
 
-    private void changeprofileMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changeprofileMouseClicked
-    JFileChooser fileChooser = new JFileChooser();
-    fileChooser.setDialogTitle("Select Profile Picture");
-    fileChooser.setAcceptAllFileFilterUsed(false);
-    fileChooser.addChoosableFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Image Files", "jpg", "png", "jpeg", "gif"));
+    private void updatequestionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updatequestionMouseClicked
+       SecretQuestion go = new SecretQuestion();
+       go.setVisible(true);
+       this.dispose();
+    }//GEN-LAST:event_updatequestionMouseClicked
 
-    int result = fileChooser.showOpenDialog(this);
-    if (result == JFileChooser.APPROVE_OPTION) {
-        File selectedFile = fileChooser.getSelectedFile();
-        try {
-            // Create folder if it doesn't exist
-            File directory = new File("profilepics");
-            directory.mkdirs();
+    private void updatequestionMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updatequestionMouseEntered
+        updatequestion.setBackground(lightGray);
+    }//GEN-LAST:event_updatequestionMouseEntered
 
-            // Copy selected image to profilepics folder with user ID as filename
-            File destFile = new File("profilepics/user_" + session.getU_id() + ".png");
-            Files.copy(selectedFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-            // Load and show image in JLabel
-            Image img = ImageIO.read(destFile);
-            img = img.getScaledInstance(profilepic.getWidth(), profilepic.getHeight(), Image.SCALE_SMOOTH);
-            profilepic.setIcon(new ImageIcon(img));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Failed to load or save image.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-    }//GEN-LAST:event_changeprofileMouseClicked
-
-    private void changeprofileMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changeprofileMouseEntered
-        changeprofile.setBackground(lightGray);
-    }//GEN-LAST:event_changeprofileMouseEntered
-
-    private void changeprofileMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changeprofileMouseExited
-        changeprofile.setBackground(lightBlue);
-    }//GEN-LAST:event_changeprofileMouseExited
+    private void updatequestionMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updatequestionMouseExited
+        updatequestion.setBackground(lightBlue);
+    }//GEN-LAST:event_updatequestionMouseExited
 
     private void changepasswordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changepasswordMouseClicked
         ChangePass acc = new ChangePass(
@@ -419,6 +424,43 @@ if (confirm == JOptionPane.YES_OPTION) {
     db.setVisible(true);
 }                     
     }//GEN-LAST:event_logoutMouseClicked
+
+    private void changeprofileMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changeprofileMouseClicked
+        JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setDialogTitle("Select Profile Picture");
+    fileChooser.setAcceptAllFileFilterUsed(false);
+    fileChooser.addChoosableFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Image Files", "jpg", "png", "jpeg", "gif"));
+
+    int result = fileChooser.showOpenDialog(this);
+    if (result == JFileChooser.APPROVE_OPTION) {
+        File selectedFile = fileChooser.getSelectedFile();
+        try {
+            // Create folder if it doesn't exist
+            File directory = new File("profilepics");
+            directory.mkdirs();
+
+            // Copy selected image to profilepics folder with user ID as filename
+            File destFile = new File("profilepics/user_" + session.getU_id() + ".png");
+            Files.copy(selectedFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+            // Load and show image in JLabel
+            Image img = ImageIO.read(destFile);
+            img = img.getScaledInstance(profilepic.getWidth(), profilepic.getHeight(), Image.SCALE_SMOOTH);
+            profilepic.setIcon(new ImageIcon(img));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to load or save image.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    }//GEN-LAST:event_changeprofileMouseClicked
+
+    private void changeprofileMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changeprofileMouseEntered
+       changeprofile.setBackground(lightGray);
+    }//GEN-LAST:event_changeprofileMouseEntered
+
+    private void changeprofileMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changeprofileMouseExited
+       changeprofile.setBackground(lightBlue);
+    }//GEN-LAST:event_changeprofileMouseExited
 
     /**
      * @param args the command line arguments
@@ -470,15 +512,18 @@ if (confirm == JOptionPane.YES_OPTION) {
     private javax.swing.JLabel email;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JLabel logout;
     private javax.swing.JLabel name;
     private javax.swing.JLabel profilepic;
     private javax.swing.JLabel role;
+    private javax.swing.JPanel updatequestion;
     private javax.swing.JPanel users;
     // End of variables declaration//GEN-END:variables
 }
