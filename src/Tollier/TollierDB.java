@@ -256,17 +256,25 @@ public class TollierDB extends javax.swing.JFrame {
     }//GEN-LAST:event_transactionMouseExited
 
     private void parkMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_parkMouseClicked
-           int selectedRow = overview.getSelectedRow(); // check if a row is selected
+         int selectedRow = overview.getSelectedRow(); // check if a row is selected
 
     if (selectedRow == -1) {
         JOptionPane.showMessageDialog(this, "Please select a parking area first.", "No Selection", JOptionPane.WARNING_MESSAGE);
-        return; // Stop if no selection
+        return; 
     }
 
-    // Get selected area ID (you can retrieve more data if needed)
+    
+    String status = overview.getValueAt(selectedRow, 4).toString(); // assuming column 2 = status
+
+    if (status.equalsIgnoreCase("Occupied")) {
+        JOptionPane.showMessageDialog(this, "Selected parking area is already occupied.", "Unavailable", JOptionPane.WARNING_MESSAGE);
+        return; // Stop if occupied
+    }
+
+    // Get selected area ID
     String areaId = overview.getValueAt(selectedRow, 0).toString(); // assuming column 0 is a_id
 
-    // Pass area ID to the AddPark form
+    // Proceed to open the AddPark form
     AddPark parkForm = new AddPark(areaId);
     parkForm.setVisible(true);
     this.dispose();
