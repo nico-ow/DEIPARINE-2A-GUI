@@ -5,6 +5,7 @@
  */
 package Admin;
 
+import Tollier.AddPark;
 import config.DBLogger;
 import config.connectDB;
 import config.session;
@@ -91,6 +92,9 @@ Color lightGray = new Color(211, 211, 211);
         jScrollPane1 = new javax.swing.JScrollPane();
         overview = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
+        park = new javax.swing.JPanel();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel22 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -211,7 +215,7 @@ Color lightGray = new Color(211, 211, 211);
         jLabel15.setText("ADD");
         add.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, -1, -1));
 
-        jPanel1.add(add, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 130, 100, 30));
+        jPanel1.add(add, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 130, 100, 30));
 
         edit.setBackground(new java.awt.Color(173, 216, 230));
         edit.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -236,7 +240,7 @@ Color lightGray = new Color(211, 211, 211);
         jLabel19.setText("EDIT");
         edit.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, -1, -1));
 
-        jPanel1.add(edit, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 130, 100, 30));
+        jPanel1.add(edit, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 130, 100, 30));
 
         delete.setBackground(new java.awt.Color(173, 216, 230));
         delete.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -261,7 +265,7 @@ Color lightGray = new Color(211, 211, 211);
         jLabel20.setText("DELETE");
         delete.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, -1, -1));
 
-        jPanel1.add(delete, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 130, 100, 30));
+        jPanel1.add(delete, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 130, 100, 30));
 
         refresh.setBackground(new java.awt.Color(173, 216, 230));
         refresh.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -286,7 +290,7 @@ Color lightGray = new Color(211, 211, 211);
         jLabel21.setText("REFRESH");
         refresh.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, -1));
 
-        jPanel1.add(refresh, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 130, 100, 30));
+        jPanel1.add(refresh, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 130, 100, 30));
 
         jPanel4.setBackground(new java.awt.Color(173, 216, 230));
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -301,6 +305,31 @@ Color lightGray = new Color(211, 211, 211);
         jLabel1.setForeground(new java.awt.Color(0, 153, 153));
         jLabel1.setText("Overall Areas");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 180, -1, -1));
+
+        park.setBackground(new java.awt.Color(173, 216, 230));
+        park.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                parkMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                parkMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                parkMouseExited(evt);
+            }
+        });
+        park.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel7.setBackground(new java.awt.Color(173, 216, 230));
+        jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        park.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 190, 100, 40));
+
+        jLabel22.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel22.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel22.setText("PARK");
+        park.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, -1, -1));
+
+        jPanel1.add(park, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 130, 100, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -465,6 +494,36 @@ try {
        this.dispose();
     }//GEN-LAST:event_dashboardMouseClicked
 
+    private void parkMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_parkMouseClicked
+        int selectedRow = overview.getSelectedRow();
+
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a parking area first.", "No Selection", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String status = overview.getValueAt(selectedRow, 4).toString();
+
+        if (status.equalsIgnoreCase("Occupied")) {
+            JOptionPane.showMessageDialog(this, "Selected parking area is already occupied.", "Unavailable", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String areaId = overview.getValueAt(selectedRow, 0).toString();
+
+        AddPark parkForm = new AddPark(areaId);
+        parkForm.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_parkMouseClicked
+
+    private void parkMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_parkMouseEntered
+        park.setBackground(lightGray);
+    }//GEN-LAST:event_parkMouseEntered
+
+    private void parkMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_parkMouseExited
+        park.setBackground(lightBlue);
+    }//GEN-LAST:event_parkMouseExited
+
     /**
      * @param args the command line arguments
      */
@@ -517,15 +576,18 @@ try {
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable overview;
+    private javax.swing.JPanel park;
     private javax.swing.JPanel refresh;
     private javax.swing.JPanel users;
     // End of variables declaration//GEN-END:variables

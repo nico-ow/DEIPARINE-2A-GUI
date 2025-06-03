@@ -5,6 +5,7 @@
  */
 package Admin;
 
+import Tollier.Transactions;
 import config.connectDB;
 import java.awt.Color;
 import java.sql.Connection;
