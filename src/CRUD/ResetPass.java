@@ -172,7 +172,7 @@ public class ResetPass extends javax.swing.JFrame {
         String userAnswer = answer.getText().trim();
     String newPassword = password.getText().trim();
 
-    // ✅ Step 1: Hash user input before comparing to stored hashed answer
+   
     String hashedUserAnswer = hashSecretAnswer(userAnswer);
 
     if (!hashedUserAnswer.equals(correctAnswer)) {
@@ -180,16 +180,16 @@ public class ResetPass extends javax.swing.JFrame {
         return;
     }
 
-    // Step 2: Validate new password
+    
     if (newPassword.isEmpty() || newPassword.length() < 6) {
         JOptionPane.showMessageDialog(this, "Password must be at least 6 characters long.", "Error", JOptionPane.ERROR_MESSAGE);
         return;
     }
 
-    // ✅ Step 3: Hash the new password
-    String hashedPassword = hasher.hashPassword(newPassword); // assuming you have this hasher class
+    
+    String hashedPassword = hasher.hashPassword(newPassword); 
 
-    // Step 4: Update password in database
+    
     try (Connection conn = connectDB.getConnection()) {
         String sql = "UPDATE tbl_user SET u_hashpw = ? WHERE u_email = ?";
         PreparedStatement stmt = conn.prepareStatement(sql);
@@ -234,8 +234,8 @@ public class ResetPass extends javax.swing.JFrame {
 
         if (rs.next()) {
             String question = rs.getString("u_question");
-            correctAnswer = rs.getString("u_answer"); // Store the answer for later verification
-            question1.setText(question); // Set the question label
+            correctAnswer = rs.getString("u_answer"); 
+            question1.setText(question); 
             
         } else {
             JOptionPane.showMessageDialog(this, "User not found or question not set.");
