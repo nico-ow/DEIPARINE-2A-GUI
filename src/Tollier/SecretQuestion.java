@@ -222,11 +222,11 @@ public class SecretQuestion extends javax.swing.JFrame {
 
             String ques = question.getSelectedItem().toString();
             String ans = answer.getText().trim();
-            String hashedAns = hashSecretAnswer(ans); // ✅ Hash the answer
+            String hashedAns = hashSecretAnswer(ans); 
             String email = connectDB.loggedInEmail;
 
             pst.setString(1, ques);
-            pst.setString(2, hashedAns); // ✅ Store hashed answer
+            pst.setString(2, hashedAns); 
             pst.setString(3, email);
 
             int rows = pst.executeUpdate();
