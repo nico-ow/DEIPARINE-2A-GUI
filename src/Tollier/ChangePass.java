@@ -357,7 +357,7 @@ public class ChangePass extends javax.swing.JFrame {
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
          for (Frame f : Frame.getFrames()) {
-    if (f instanceof Admin.Account) {
+    if (f instanceof Account) {
         f.setVisible(true);
         this.dispose();
         return;
@@ -365,7 +365,7 @@ public class ChangePass extends javax.swing.JFrame {
 }
 
 
-Admin.Account go = new Admin.Account();
+Account go = new Account();
 go.setVisible(true);
 this.dispose();
     }//GEN-LAST:event_jLabel4MouseClicked
