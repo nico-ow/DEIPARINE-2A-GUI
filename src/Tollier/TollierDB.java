@@ -364,7 +364,7 @@ public class TollierDB extends javax.swing.JFrame {
         }
 
         String areaId = overview.getValueAt(selectedRow, 0).toString();
-        String currentStatus = overview.getValueAt(selectedRow, 2).toString();
+        String currentStatus = overview.getValueAt(selectedRow, 4).toString();
 
         if ("Available".equalsIgnoreCase(currentStatus)) {
             JOptionPane.showMessageDialog(null, "✅ This area is already available.");
