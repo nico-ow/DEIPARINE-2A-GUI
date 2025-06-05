@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.print.PrinterException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,6 +22,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import net.proteanit.sql.DbUtils;
@@ -368,7 +371,6 @@ public class Transactions extends javax.swing.JFrame {
         return;
     }
 
-    // Proceed with receipt generation
     Object transactionID = overview.getValueAt(selectedRow, 0);
     Object areaID = overview.getValueAt(selectedRow, 1);
     Object customerName = overview.getValueAt(selectedRow, 2);
@@ -378,20 +380,49 @@ public class Transactions extends javax.swing.JFrame {
     Object totalDue = overview.getValueAt(selectedRow, 6);
     Object transactionTime = overview.getValueAt(selectedRow, 7);
 
-    String receipt = "----- Parking Transaction Receipt -----\n"
-        + "Transaction ID: " + transactionID + "\n"
-        + "Area ID: " + areaID + "\n"
-        + "Customer Name: " + customerName + "\n"
-        + "Car Plate: " + carPlate + "\n"
-        + "Contact Number: " + contactNumber + "\n"
-        + "Hours Parked: " + hours + "\n"
-        + "Total Due: ₱" + totalDue + "\n"
-        + "Transaction Time: " + transactionTime + "\n"
-        + "Status: " + statusObj + "\n"
-        + "---------------------------------------\n"
-        + "Thank you for parking with us!";
+    String receipt = String.format(
+        "************ iPark Parking System ************%n" +
+        "             Welcome and Thank You!           %n" +
+        "----------------------------------------------%n" +
+        "Transaction ID  : %s%n" +
+        "Area ID         : %s%n" +
+        "Customer Name   : %s%n" +
+        "Car Plate       : %s%n" +
+        "Contact Number  : %s%n" +
+        "Hours Parked    : %s%n" +
+        "Total Due       : ₱%s%n" +
+        "Transaction Time: %s%n" +
+        "Status          : %s%n" +
+        "----------------------------------------------%n" +
+        "Thank you for parking with iPark!%n" +
+        "Have a great day!%n",
+        transactionID, areaID, customerName, carPlate, contactNumber, hours, totalDue, transactionTime, statusObj
+    );
 
-    JOptionPane.showMessageDialog(null, receipt, "Receipt", JOptionPane.INFORMATION_MESSAGE);
+    JTextArea textArea = new JTextArea(receipt);
+    textArea.setEditable(false);
+    textArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
+    JScrollPane scrollPane = new JScrollPane(textArea);
+    scrollPane.setPreferredSize(new Dimension(400, 300));
+
+    int option = JOptionPane.showOptionDialog(
+        null, scrollPane, "Receipt",
+        JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
+        null, new String[]{"Print", "Close"}, "Print"
+    );
+
+    if (option == JOptionPane.YES_OPTION) {
+        try {
+            boolean complete = textArea.print();
+            if (complete) {
+                JOptionPane.showMessageDialog(null, "Receipt printed successfully.");
+            } else {
+                JOptionPane.showMessageDialog(null, "Printing was cancelled.");
+            }
+        } catch (PrinterException e) {
+            JOptionPane.showMessageDialog(null, "Printing failed: " + e.getMessage());
+        }
+    }
     }//GEN-LAST:event_recieptMouseClicked
 
     private void recieptMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_recieptMouseEntered
