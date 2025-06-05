@@ -9,6 +9,10 @@ import config.connectDB;
 import config.session;
 import java.awt.Color;
 import java.awt.Frame;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 /**
@@ -17,15 +21,14 @@ import javax.swing.JOptionPane;
  */
 public class AreaForm extends javax.swing.JFrame {
 
-    /**
-     * Creates new form AreaForm
-     */
-    public AreaForm() {
-        initComponents();
-    }
     Color lightGray = new Color(211, 211, 211);
     Color lightBlue = new Color(173, 216, 230);
-
+    public AreaForm() {
+        initComponents();
+        create.setBackground(lightBlue); 
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -259,16 +262,66 @@ public class AreaForm extends javax.swing.JFrame {
     }//GEN-LAST:event_rateActionPerformed
 
     private void createMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_createMouseClicked
-       connectDB con = new connectDB();
+       String areaName = name.getText().trim();
+    String rateValue = rate.getText().trim();
+    String areaLocation = location.getText().trim();
 
-con.insertData("INSERT INTO area_tbl (a_name, a_rate, a_location, a_status) " +
-    "VALUES ('" + name.getText() + "','" + rate.getText() + "','" + location.getText() + "', 'Available')");
+    // Validation: Check if any field is empty
+    if (areaName.isEmpty() || rateValue.isEmpty() || areaLocation.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "❗ Please fill out all fields.", "Missing Input", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
 
-JOptionPane.showMessageDialog(this, "Area added, successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+    connectDB con = new connectDB();
+    Connection dbConn = null;
+    PreparedStatement checkStmt = null;
+    ResultSet rs = null;
 
-Areas acc = new Areas();
-acc.setVisible(true);
-this.dispose();
+    try {
+        dbConn = connectDB.getConnection();
+
+       
+        String checkQuery = "SELECT * FROM area_tbl WHERE a_name = ?";
+        checkStmt = dbConn.prepareStatement(checkQuery);
+        checkStmt.setString(1, areaName);
+        rs = checkStmt.executeQuery();
+
+        if (rs.next()) {
+            JOptionPane.showMessageDialog(this, "⚠️ An area with this name already exists.", "Duplicate Entry", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        
+        String insertQuery = "INSERT INTO area_tbl (a_name, a_rate, a_location, a_status) VALUES (?, ?, ?, 'Available')";
+        PreparedStatement insertStmt = dbConn.prepareStatement(insertQuery);
+        insertStmt.setString(1, areaName);
+        insertStmt.setString(2, rateValue);
+        insertStmt.setString(3, areaLocation);
+
+        int rowsInserted = insertStmt.executeUpdate();
+
+        if (rowsInserted > 0) {
+            JOptionPane.showMessageDialog(this, "✅ Area added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+           
+            Areas acc = new Areas();
+            acc.setVisible(true);
+            this.dispose();
+        }
+
+        insertStmt.close();
+
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "❌ Database error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    } finally {
+        try {
+            if (rs != null) rs.close();
+            if (checkStmt != null) checkStmt.close();
+            if (dbConn != null) dbConn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     }//GEN-LAST:event_createMouseClicked
 
     private void createMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_createMouseEntered

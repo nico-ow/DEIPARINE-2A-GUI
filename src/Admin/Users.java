@@ -49,7 +49,7 @@ public class Users extends javax.swing.JFrame {
         connectDB dbc = new connectDB();
         
         // Select only the specific columns from tbl_user
-        String query = "SELECT u_id, u_firstname, u_lastname, u_contactnumber, u_type, u_status FROM tbl_user";
+        String query = "SELECT u_id, u_firstname, u_lastname, u_email, u_contactnumber, u_type, u_status FROM tbl_user";
         ResultSet rs = dbc.getData(query);
         
         // Use DbUtils to set the result set to the table
@@ -59,9 +59,10 @@ public class Users extends javax.swing.JFrame {
         overview.getColumnModel().getColumn(0).setHeaderValue("ID");
         overview.getColumnModel().getColumn(1).setHeaderValue("First Name");
         overview.getColumnModel().getColumn(2).setHeaderValue("Last Name");
-        overview.getColumnModel().getColumn(3).setHeaderValue("Contact Number");
-        overview.getColumnModel().getColumn(4).setHeaderValue("Role");
-        overview.getColumnModel().getColumn(5).setHeaderValue("Status");
+        overview.getColumnModel().getColumn(3).setHeaderValue("Email");
+        overview.getColumnModel().getColumn(4).setHeaderValue("Contact Number");
+        overview.getColumnModel().getColumn(5).setHeaderValue("Role");
+        overview.getColumnModel().getColumn(6).setHeaderValue("Status");
         
         // Refresh the table to apply the new headers
         overview.getTableHeader().repaint();

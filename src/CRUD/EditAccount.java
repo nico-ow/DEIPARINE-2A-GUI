@@ -5,12 +5,14 @@
  */
 package CRUD;
 
+import Admin.Areas;
 import Admin.Users;
 import config.DBLogger;
 import config.connectDB;
 import config.session;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Frame;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -308,6 +310,13 @@ public class EditAccount extends javax.swing.JFrame {
     }//GEN-LAST:event_editMouseExited
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
+         for (Frame f : Frame.getFrames()) {
+    if (f instanceof Users) {
+        f.setVisible(true);
+        this.dispose();
+        return;
+    }
+}
         Users go = new Users();
         go.setVisible(true);
         this.dispose();
@@ -433,10 +442,10 @@ contactnumber.repaint();
                 String id = null;
                 String fname = null;
                 String lname = null;
-                String pnum = null;
                 String eMail = null;
+                String pnum = null;
 
-                new EditAccount(id, fname, lname, pnum, eMail).setVisible(true);
+                new EditAccount(id, fname, lname, eMail, pnum).setVisible(true);
             }
         });
     }

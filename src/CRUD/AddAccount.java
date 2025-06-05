@@ -5,6 +5,7 @@
  */
 package CRUD;
 
+import Admin.Areas;
 import Admin.Users;
 import config.DBLogger;
 import config.connectDB;
@@ -17,6 +18,7 @@ import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import Main.LoginPanel;
 import config.hasher;
+import java.awt.Frame;
 /**
  *
  * @author mendo
@@ -530,6 +532,13 @@ con.insertData("INSERT INTO tbl_user (u_firstname, u_lastname, u_email, u_contac
     }//GEN-LAST:event_createMouseExited
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
+         for (Frame f : Frame.getFrames()) {
+    if (f instanceof Users) {
+        f.setVisible(true);
+        this.dispose();
+        return;
+    }
+}
         Users go = new Users();
         go.setVisible(true);
         this.dispose();
