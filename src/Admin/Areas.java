@@ -8,9 +8,24 @@ import config.DBLogger;
 import config.connectDB;
 import config.session;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import net.proteanit.sql.DbUtils;
 
 /**
@@ -95,6 +110,9 @@ Color lightGray = new Color(211, 211, 211);
         park = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         jLabel22 = new javax.swing.JLabel();
+        out = new javax.swing.JPanel();
+        jPanel9 = new javax.swing.JPanel();
+        jLabel23 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -351,6 +369,31 @@ Color lightGray = new Color(211, 211, 211);
 
         jPanel1.add(park, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 130, 100, 30));
 
+        out.setBackground(new java.awt.Color(173, 216, 230));
+        out.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                outMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                outMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                outMouseExited(evt);
+            }
+        });
+        out.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel9.setBackground(new java.awt.Color(173, 216, 230));
+        jPanel9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        out.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 190, 100, 40));
+
+        jLabel23.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel23.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel23.setText("OUT");
+        out.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(37, 10, -1, -1));
+
+        jPanel1.add(out, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 170, 100, 30));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -491,9 +534,34 @@ try {
     }//GEN-LAST:event_parkMouseExited
 
     private void accountMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_accountMouseClicked
-        Account go = new Account();
-        go.setVisible(true);
-        this.dispose();
+        JDialog loadingDialog = new JDialog(this, "Loading", true);
+    JLabel loadingLabel = new JLabel("Loading, please wait...", SwingConstants.CENTER);
+    loadingDialog.add(loadingLabel);
+    loadingDialog.setSize(200, 100);
+    loadingDialog.setLocationRelativeTo(this);
+    loadingDialog.setUndecorated(true);
+    loadingDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+
+   
+    SwingUtilities.invokeLater(() -> loadingDialog.setVisible(true));
+
+    
+    new Thread(() -> {
+        try {
+            Thread.sleep(1000); 
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+       
+        loadingDialog.dispose();
+
+        SwingUtilities.invokeLater(() -> {
+            Account go = new Account();
+            go.setVisible(true);
+            this.dispose();
+        });
+    }).start();
     }//GEN-LAST:event_accountMouseClicked
 
     private void accountMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_accountMouseEntered
@@ -559,6 +627,74 @@ try {
         users.setBackground(lightBlue);
     }//GEN-LAST:event_usersMouseExited
 
+    private void outMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_outMouseClicked
+         int selectedRow = overview.getSelectedRow(); 
+
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(null, "❗ Please select an area first.");
+        return;
+    }
+
+    String areaId = overview.getValueAt(selectedRow, 0).toString();   
+    String currentStatus = overview.getValueAt(selectedRow, 2).toString(); 
+
+    
+    if ("Available".equalsIgnoreCase(currentStatus)) {
+        JOptionPane.showMessageDialog(null, "✅ This area is already available.");
+        return;
+    }
+
+    
+    int confirm = JOptionPane.showConfirmDialog(
+        null,
+        "Do you want to mark this area as available?",
+        "Confirm Update",
+        JOptionPane.YES_NO_OPTION
+    );
+
+    if (confirm != JOptionPane.YES_OPTION) {
+        return;
+    }
+
+    Connection con = null;
+    PreparedStatement pst = null;
+
+    try {
+        con = config.connectDB.getConnection();
+
+        String sql = "UPDATE area_tbl SET a_status = 'Available' WHERE a_id = ?";
+        pst = con.prepareStatement(sql);
+        pst.setString(1, areaId);
+
+        int result = pst.executeUpdate();
+
+        if (result > 0) {
+            JOptionPane.showMessageDialog(null, "✅ Area has been marked as available.");
+            displayData(); 
+        } else {
+            JOptionPane.showMessageDialog(null, "⚠️ Failed to update. Area not found.");
+        }
+
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(null, "❌ Database error: " + ex.getMessage());
+    } finally {
+        try {
+            if (pst != null) pst.close();
+            if (con != null) con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    }//GEN-LAST:event_outMouseClicked
+
+    private void outMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_outMouseEntered
+        out.setBackground(lightGray);
+    }//GEN-LAST:event_outMouseEntered
+
+    private void outMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_outMouseExited
+        out.setBackground(lightBlue);
+    }//GEN-LAST:event_outMouseExited
+
     /**
      * @param args the command line arguments
      */
@@ -613,6 +749,7 @@ try {
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
@@ -621,11 +758,17 @@ try {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel out;
     private javax.swing.JTable overview;
     private javax.swing.JPanel park;
     private javax.swing.JPanel refresh;
     private javax.swing.JPanel transaction;
     private javax.swing.JPanel users;
     // End of variables declaration//GEN-END:variables
+
+    private Connection connectDB() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

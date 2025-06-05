@@ -7,10 +7,22 @@ package Tollier;
 
 import config.connectDB;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import net.proteanit.sql.DbUtils;
 
 /**
@@ -290,9 +302,34 @@ public class Transactions extends javax.swing.JFrame {
     }//GEN-LAST:event_dashboardMouseExited
 
     private void accountMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_accountMouseClicked
-        Account go = new Account();
-        go.setVisible(true);
-        this.dispose();
+            JDialog loadingDialog = new JDialog(this, "Loading", true);
+    JLabel loadingLabel = new JLabel("Loading, please wait...", SwingConstants.CENTER);
+    loadingDialog.add(loadingLabel);
+    loadingDialog.setSize(200, 100);
+    loadingDialog.setLocationRelativeTo(this);
+    loadingDialog.setUndecorated(true);
+    loadingDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+
+   
+    SwingUtilities.invokeLater(() -> loadingDialog.setVisible(true));
+
+    
+    new Thread(() -> {
+        try {
+            Thread.sleep(1000); 
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+       
+        loadingDialog.dispose();
+
+        SwingUtilities.invokeLater(() -> {
+            Admin.Account go = new Admin.Account();
+            go.setVisible(true);
+            this.dispose();
+        });
+    }).start();
     }//GEN-LAST:event_accountMouseClicked
 
     private void accountMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_accountMouseEntered
