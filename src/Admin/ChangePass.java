@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package CRUD;
+package Admin;
 
+import CRUD.*;
 import Admin.Account;
 import Admin.Users;
 import config.DBLogger;
@@ -13,6 +14,7 @@ import config.hasher;
 import config.session;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Frame;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
@@ -356,9 +358,18 @@ public class ChangePass extends javax.swing.JFrame {
     }//GEN-LAST:event_refreshMouseExited
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
-        Account go = new Account();
-        go.setVisible(true);
+        for (Frame f : Frame.getFrames()) {
+    if (f instanceof Account) {
+        f.setVisible(true);
         this.dispose();
+        return;
+    }
+}
+
+
+Account go = new Account();
+go.setVisible(true);
+this.dispose();
     }//GEN-LAST:event_jLabel4MouseClicked
     private boolean signUpValidation() {
         boolean valid = true;
@@ -405,6 +416,7 @@ public class ChangePass extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(ChangePass.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */

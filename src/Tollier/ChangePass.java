@@ -12,6 +12,7 @@ import config.hasher;
 import config.session;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Frame;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
@@ -355,9 +356,18 @@ public class ChangePass extends javax.swing.JFrame {
     }//GEN-LAST:event_refreshMouseExited
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
-        Account go = new Account();
-        go.setVisible(true);
+         for (Frame f : Frame.getFrames()) {
+    if (f instanceof Admin.Account) {
+        f.setVisible(true);
         this.dispose();
+        return;
+    }
+}
+
+
+Admin.Account go = new Admin.Account();
+go.setVisible(true);
+this.dispose();
     }//GEN-LAST:event_jLabel4MouseClicked
     private boolean signUpValidation() {
         boolean valid = true;

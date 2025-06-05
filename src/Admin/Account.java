@@ -5,7 +5,6 @@
  */
 package Admin;
 
-import CRUD.ChangePass;
 import config.session;
 import java.awt.Image;
 import java.io.File;
@@ -16,8 +15,10 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import Main.LoginPanel;
 import java.awt.Color;
+import java.awt.Window;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -380,17 +381,23 @@ public class Account extends javax.swing.JFrame {
 
     private void logoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseClicked
     int confirm = JOptionPane.showConfirmDialog(
-    this,
-    "Are you sure you want to logout?",
-    "Logout Confirmation",
-    JOptionPane.YES_NO_OPTION
-);
+        this,
+        "Are you sure you want to logout?",
+        "Logout Confirmation",
+        JOptionPane.YES_NO_OPTION
+    );
 
-if (confirm == JOptionPane.YES_OPTION) {
-    LoginPanel db = new LoginPanel();
-    this.dispose();
-    db.setVisible(true);
-}                     
+    if (confirm == JOptionPane.YES_OPTION) {
+       
+        Window window = SwingUtilities.getWindowAncestor(logout);
+        if (window != null) {
+            window.dispose(); 
+        }
+
+        
+        LoginPanel login = new LoginPanel();
+        login.setVisible(true);
+    }
     }//GEN-LAST:event_logoutMouseClicked
 
     private void changeprofileMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changeprofileMouseClicked

@@ -8,6 +8,7 @@ package Admin;
 import config.connectDB;
 import config.session;
 import java.awt.Color;
+import java.awt.Frame;
 import javax.swing.JOptionPane;
 
 /**
@@ -221,6 +222,13 @@ public class AreaForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
+         for (Frame f : Frame.getFrames()) {
+    if (f instanceof Areas) {
+        f.setVisible(true);
+        this.dispose();
+        return;
+    }
+}
         Areas go = new Areas();
         go.setVisible(true);
         this.dispose();

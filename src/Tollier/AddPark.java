@@ -7,6 +7,7 @@ package Tollier;
 
 import config.connectDB;
 import java.awt.Color;
+import java.awt.Frame;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
@@ -298,6 +299,13 @@ public class AddPark extends javax.swing.JFrame {
     }//GEN-LAST:event_hoursActionPerformed
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
+          for (Frame f : Frame.getFrames()) {
+    if (f instanceof TollierDB) {
+        f.setVisible(true);
+        this.dispose();
+        return;
+    }
+}
         TollierDB go = new TollierDB();
         go.setVisible(true);
         this.dispose();
