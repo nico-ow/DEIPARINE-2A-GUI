@@ -5,7 +5,6 @@
  */
 package Admin;
 
-import Tollier.*;
 import config.connectDB;
 import java.awt.Color;
 import java.sql.PreparedStatement;
@@ -299,7 +298,7 @@ public class AddPark extends javax.swing.JFrame {
     }//GEN-LAST:event_hoursActionPerformed
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
-        TollierDB go = new TollierDB();
+        Areas go = new Areas();
         go.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel4MouseClicked
