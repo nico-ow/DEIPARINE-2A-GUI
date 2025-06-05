@@ -5,7 +5,7 @@
  */
 package Admin;
 
-import Tollier.Transactions;
+
 import config.connectDB;
 import java.awt.Color;
 import java.sql.Connection;
@@ -92,6 +92,8 @@ public class AdminDB extends javax.swing.JFrame {
         admin1 = new javax.swing.JLabel();
         users = new javax.swing.JPanel();
         admin2 = new javax.swing.JLabel();
+        transaction = new javax.swing.JPanel();
+        admin4 = new javax.swing.JLabel();
         areas = new javax.swing.JPanel();
         admin3 = new javax.swing.JLabel();
         jLabel26 = new javax.swing.JLabel();
@@ -131,7 +133,7 @@ public class AdminDB extends javax.swing.JFrame {
         admin.setText("ACCOUNT");
         account.add(admin, new org.netbeans.lib.awtextra.AbsoluteConstraints(39, 7, -1, -1));
 
-        jPanel2.add(account, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 330, 170, 40));
+        jPanel2.add(account, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 370, 170, 40));
 
         adminname.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
         adminname.setForeground(new java.awt.Color(102, 102, 102));
@@ -177,6 +179,26 @@ public class AdminDB extends javax.swing.JFrame {
         users.add(admin2, new org.netbeans.lib.awtextra.AbsoluteConstraints(54, 7, -1, -1));
 
         jPanel2.add(users, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 250, 170, 40));
+
+        transaction.setBackground(new java.awt.Color(173, 216, 230));
+        transaction.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                transactionMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                transactionMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                transactionMouseExited(evt);
+            }
+        });
+        transaction.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        admin4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        admin4.setText("TRANSACTIONS");
+        transaction.add(admin4, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 8, -1, -1));
+
+        jPanel2.add(transaction, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 330, 170, 40));
 
         areas.setBackground(new java.awt.Color(173, 216, 230));
         areas.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -354,6 +376,21 @@ public class AdminDB extends javax.swing.JFrame {
        
     }//GEN-LAST:event_dashboardMouseClicked
 
+    private void transactionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_transactionMouseClicked
+        Transactions go = new Transactions();
+        go.setVisible(true);
+        this.dispose();
+                
+    }//GEN-LAST:event_transactionMouseClicked
+
+    private void transactionMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_transactionMouseEntered
+        transaction.setBackground(lightGray);
+    }//GEN-LAST:event_transactionMouseEntered
+
+    private void transactionMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_transactionMouseExited
+        transaction.setBackground(lightBlue);
+    }//GEN-LAST:event_transactionMouseExited
+
     /**
      * @param args the command line arguments
      */
@@ -395,6 +432,7 @@ public class AdminDB extends javax.swing.JFrame {
     private javax.swing.JLabel admin1;
     private javax.swing.JLabel admin2;
     private javax.swing.JLabel admin3;
+    private javax.swing.JLabel admin4;
     private javax.swing.JLabel adminname;
     private javax.swing.JPanel areas;
     private javax.swing.JPanel dashboard;
@@ -410,6 +448,7 @@ public class AdminDB extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable overview;
     private javax.swing.JPanel refresh;
+    private javax.swing.JPanel transaction;
     private javax.swing.JPanel users;
     // End of variables declaration//GEN-END:variables
 }

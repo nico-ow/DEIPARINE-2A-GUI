@@ -5,65 +5,59 @@
  */
 package Admin;
 
-import CRUD.ChangePass;
-import config.session;
-import java.awt.Image;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import Main.LoginPanel;
+import config.connectDB;
 import java.awt.Color;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import net.proteanit.sql.DbUtils;
 
 /**
  *
  * @author mendo
  */
-public class Account extends javax.swing.JFrame {
+public class Transactions extends javax.swing.JFrame {
 
     /**
-     * Creates new form Account
+     * Creates new form Transactions
      */
-    public Account() {
+    public Transactions() {
         initComponents();
-        accountInformation();
+        displayData();
     }
     Color lightGray = new Color(211, 211, 211);
     Color lightBlue = new Color(173, 216, 230);
-    
-     public void accountInformation() {
-
-        session sess = session.getInstance();
-
-        String fullName = session.getFirstName() + " " + session.getLastName();
-
-        name.setText("Name: " + fullName);
+    public void displayData() {
+    try {
+        connectDB dbc = new connectDB();
         
-
-        email.setText("Email: " +session.getEmail());
+        // Select specific columns from transactions table
+        String query = "SELECT t_id, a_id, customer_name, car_plate, contact_number, hours, total_due, transaction_time, status FROM transactions";
+        ResultSet rs = dbc.getData(query);
         
+        // Set the result set to the table model using DbUtils
+        overview.setModel(DbUtils.resultSetToTableModel(rs));
         
-        cnum.setText("Contact Number: " +session.getContact());
+        // Change column titles according to the query columns
+        overview.getColumnModel().getColumn(0).setHeaderValue("Transaction ID");      // t_id
+        overview.getColumnModel().getColumn(1).setHeaderValue("Area ID");            // a_id
+        overview.getColumnModel().getColumn(2).setHeaderValue("Customer Name");       // customer_name
+        overview.getColumnModel().getColumn(3).setHeaderValue("Car Plate");           // car_plate
+        overview.getColumnModel().getColumn(4).setHeaderValue("Contact Number");      // contact_number
+        overview.getColumnModel().getColumn(5).setHeaderValue("Hours");               // hours
+        overview.getColumnModel().getColumn(6).setHeaderValue("Total Due");           // total_due
+        overview.getColumnModel().getColumn(7).setHeaderValue("Transaction Time");    // transaction_time
+        overview.getColumnModel().getColumn(8).setHeaderValue("Status");              // status
         
-        role.setText("Role: " + session.getAcc_type());
+        // Refresh the table headers to display the new names
+        overview.getTableHeader().repaint();
         
-         try {
-        File imgFile = new File("profilepics/user_" + session.getU_id() + ".png");
-        if (imgFile.exists()) {
-            Image img = ImageIO.read(imgFile);
-            img = img.getScaledInstance(profilepic.getWidth(), profilepic.getHeight(), Image.SCALE_SMOOTH);
-            profilepic.setIcon(new ImageIcon(img));
-        }
-    } catch (IOException e) {
-        e.printStackTrace();
+    } catch (SQLException ex) {
+        System.out.println("Errors: " + ex.getMessage());
     }
-     
+}
 
-    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -76,7 +70,6 @@ public class Account extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         adminname = new javax.swing.JLabel();
-        logout = new javax.swing.JLabel();
         account = new javax.swing.JPanel();
         admin = new javax.swing.JLabel();
         dashboard = new javax.swing.JPanel();
@@ -88,18 +81,17 @@ public class Account extends javax.swing.JFrame {
         users = new javax.swing.JPanel();
         admin2 = new javax.swing.JLabel();
         jLabel26 = new javax.swing.JLabel();
-        profilepic = new javax.swing.JLabel();
-        name = new javax.swing.JLabel();
-        email = new javax.swing.JLabel();
-        cnum = new javax.swing.JLabel();
-        role = new javax.swing.JLabel();
-        updatequestion = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        overview = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
+        reciept = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         jLabel21 = new javax.swing.JLabel();
-        changepassword = new javax.swing.JPanel();
+        paid = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         jLabel22 = new javax.swing.JLabel();
-        changeprofile = new javax.swing.JPanel();
+        refresh = new javax.swing.JPanel();
         jPanel8 = new javax.swing.JPanel();
         jLabel23 = new javax.swing.JLabel();
 
@@ -115,14 +107,6 @@ public class Account extends javax.swing.JFrame {
         adminname.setForeground(new java.awt.Color(102, 102, 102));
         adminname.setText("ADMIN");
         jPanel2.add(adminname, new org.netbeans.lib.awtextra.AbsoluteConstraints(47, 130, -1, -1));
-
-        logout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/logout (2).png"))); // NOI18N
-        logout.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                logoutMouseClicked(evt);
-            }
-        });
-        jPanel2.add(logout, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 430, -1, -1));
 
         account.setBackground(new java.awt.Color(173, 216, 230));
         account.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -228,210 +212,223 @@ public class Account extends javax.swing.JFrame {
 
         jLabel26.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
         jLabel26.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel26.setText("PERSONAL INFORMATION");
-        jPanel1.add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 10, -1, -1));
+        jLabel26.setText("TRANSACTIONS");
+        jPanel1.add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 10, -1, -1));
 
-        profilepic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Image/project-manager (2).png"))); // NOI18N
-        jPanel1.add(profilepic, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 70, 90, 100));
+        jPanel4.setBackground(new java.awt.Color(173, 216, 230));
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        name.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        name.setText("Name");
-        jPanel1.add(name, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 180, 540, 40));
+        jScrollPane1.setViewportView(overview);
 
-        email.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        email.setText("Email");
-        jPanel1.add(email, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 280, 540, 40));
+        jPanel4.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 630, 220));
 
-        cnum.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        cnum.setText("Contactnum");
-        jPanel1.add(cnum, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 330, 540, 40));
+        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 210, 650, 240));
 
-        role.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        role.setText("Role");
-        jPanel1.add(role, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 230, 540, 40));
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 153, 153));
+        jLabel1.setText("Transaction Records");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 180, -1, -1));
 
-        updatequestion.setBackground(new java.awt.Color(173, 216, 230));
-        updatequestion.addMouseListener(new java.awt.event.MouseAdapter() {
+        reciept.setBackground(new java.awt.Color(173, 216, 230));
+        reciept.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                updatequestionMouseClicked(evt);
+                recieptMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                updatequestionMouseEntered(evt);
+                recieptMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                updatequestionMouseExited(evt);
+                recieptMouseExited(evt);
             }
         });
-        updatequestion.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        reciept.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel6.setBackground(new java.awt.Color(173, 216, 230));
         jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        updatequestion.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 190, 100, 40));
+        reciept.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 190, 100, 40));
 
         jLabel21.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel21.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel21.setText("SECRET QUESTION");
-        updatequestion.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(26, 10, -1, -1));
+        jLabel21.setText("RECIEPT");
+        reciept.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, -1, -1));
 
-        jPanel1.add(updatequestion, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 420, 150, 30));
+        jPanel1.add(reciept, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 170, 100, 30));
 
-        changepassword.setBackground(new java.awt.Color(173, 216, 230));
-        changepassword.addMouseListener(new java.awt.event.MouseAdapter() {
+        paid.setBackground(new java.awt.Color(173, 216, 230));
+        paid.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                changepasswordMouseClicked(evt);
+                paidMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                changepasswordMouseEntered(evt);
+                paidMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                changepasswordMouseExited(evt);
+                paidMouseExited(evt);
             }
         });
-        changepassword.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        paid.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel7.setBackground(new java.awt.Color(173, 216, 230));
         jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        changepassword.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 190, 100, 40));
+        paid.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 190, 100, 40));
 
         jLabel22.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel22.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel22.setText("CHANGE PASSWORD");
-        changepassword.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(19, 10, -1, -1));
+        jLabel22.setText("PAID");
+        paid.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(35, 10, -1, -1));
 
-        jPanel1.add(changepassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 420, 150, 30));
+        jPanel1.add(paid, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 170, 100, 30));
 
-        changeprofile.setBackground(new java.awt.Color(173, 216, 230));
-        changeprofile.addMouseListener(new java.awt.event.MouseAdapter() {
+        refresh.setBackground(new java.awt.Color(173, 216, 230));
+        refresh.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                changeprofileMouseClicked(evt);
+                refreshMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                changeprofileMouseEntered(evt);
+                refreshMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                changeprofileMouseExited(evt);
+                refreshMouseExited(evt);
             }
         });
-        changeprofile.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        refresh.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel8.setBackground(new java.awt.Color(173, 216, 230));
         jPanel8.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        changeprofile.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 190, 100, 40));
+        refresh.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 190, 100, 40));
 
         jLabel23.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel23.setForeground(new java.awt.Color(102, 102, 102));
-        jLabel23.setText("CHANGE PROFILE");
-        changeprofile.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(26, 10, -1, -1));
+        jLabel23.setText("REFRESH");
+        refresh.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, -1, -1));
 
-        jPanel1.add(changeprofile, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 420, 150, 30));
+        jPanel1.add(refresh, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 170, 100, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 838, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 838, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void updatequestionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updatequestionMouseClicked
-       SecretQuestion go = new SecretQuestion();
-       go.setVisible(true);
-       this.dispose();
-    }//GEN-LAST:event_updatequestionMouseClicked
+    private void recieptMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_recieptMouseClicked
+     int selectedRow = overview.getSelectedRow();
 
-    private void updatequestionMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updatequestionMouseEntered
-        updatequestion.setBackground(lightGray);
-    }//GEN-LAST:event_updatequestionMouseEntered
-
-    private void updatequestionMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updatequestionMouseExited
-        updatequestion.setBackground(lightBlue);
-    }//GEN-LAST:event_updatequestionMouseExited
-
-    private void changepasswordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changepasswordMouseClicked
-        ChangePass acc = new ChangePass(
-        session.getU_id(), 
-        session.getFirstName(), 
-        session.getLastName(), 
-        session.getEmail(), 
-        session.getContact()
-    );
-        acc.setVisible(true);
-
-    }//GEN-LAST:event_changepasswordMouseClicked
-
-    private void changepasswordMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changepasswordMouseEntered
-        changepassword.setBackground(lightGray);
-    }//GEN-LAST:event_changepasswordMouseEntered
-
-    private void changepasswordMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changepasswordMouseExited
-        changepassword.setBackground(lightBlue);
-    }//GEN-LAST:event_changepasswordMouseExited
-
-    private void logoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseClicked
-    int confirm = JOptionPane.showConfirmDialog(
-    this,
-    "Are you sure you want to logout?",
-    "Logout Confirmation",
-    JOptionPane.YES_NO_OPTION
-);
-
-if (confirm == JOptionPane.YES_OPTION) {
-    LoginPanel db = new LoginPanel();
-    this.dispose();
-    db.setVisible(true);
-}                     
-    }//GEN-LAST:event_logoutMouseClicked
-
-    private void changeprofileMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changeprofileMouseClicked
-        JFileChooser fileChooser = new JFileChooser();
-    fileChooser.setDialogTitle("Select Profile Picture");
-    fileChooser.setAcceptAllFileFilterUsed(false);
-    fileChooser.addChoosableFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Image Files", "jpg", "png", "jpeg", "gif"));
-
-    int result = fileChooser.showOpenDialog(this);
-    if (result == JFileChooser.APPROVE_OPTION) {
-        File selectedFile = fileChooser.getSelectedFile();
-        try {
-            // Create folder if it doesn't exist
-            File directory = new File("profilepics");
-            directory.mkdirs();
-
-            // Copy selected image to profilepics folder with user ID as filename
-            File destFile = new File("profilepics/user_" + session.getU_id() + ".png");
-            Files.copy(selectedFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-            // Load and show image in JLabel
-            Image img = ImageIO.read(destFile);
-            img = img.getScaledInstance(profilepic.getWidth(), profilepic.getHeight(), Image.SCALE_SMOOTH);
-            profilepic.setIcon(new ImageIcon(img));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Failed to load or save image.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(null, "Please select a transaction from the table.");
+        return;
     }
-    }//GEN-LAST:event_changeprofileMouseClicked
 
-    private void changeprofileMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changeprofileMouseEntered
-       changeprofile.setBackground(lightGray);
-    }//GEN-LAST:event_changeprofileMouseEntered
+    Object statusObj = overview.getValueAt(selectedRow, 8);
+    String status = statusObj.toString().trim().toLowerCase();
 
-    private void changeprofileMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changeprofileMouseExited
-       changeprofile.setBackground(lightBlue);
-    }//GEN-LAST:event_changeprofileMouseExited
+    if (status.equals("pending")) {
+        JOptionPane.showMessageDialog(null, "Cannot generate receipt for pending transactions.", "Action Blocked", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // Proceed with receipt generation
+    Object transactionID = overview.getValueAt(selectedRow, 0);
+    Object areaID = overview.getValueAt(selectedRow, 1);
+    Object customerName = overview.getValueAt(selectedRow, 2);
+    Object carPlate = overview.getValueAt(selectedRow, 3);
+    Object contactNumber = overview.getValueAt(selectedRow, 4);
+    Object hours = overview.getValueAt(selectedRow, 5);
+    Object totalDue = overview.getValueAt(selectedRow, 6);
+    Object transactionTime = overview.getValueAt(selectedRow, 7);
+
+    String receipt = "----- Parking Transaction Receipt -----\n"
+        + "Transaction ID: " + transactionID + "\n"
+        + "Area ID: " + areaID + "\n"
+        + "Customer Name: " + customerName + "\n"
+        + "Car Plate: " + carPlate + "\n"
+        + "Contact Number: " + contactNumber + "\n"
+        + "Hours Parked: " + hours + "\n"
+        + "Total Due: ₱" + totalDue + "\n"
+        + "Transaction Time: " + transactionTime + "\n"
+        + "Status: " + statusObj + "\n"
+        + "---------------------------------------\n"
+        + "Thank you for parking with us!";
+
+    JOptionPane.showMessageDialog(null, receipt, "Receipt", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_recieptMouseClicked
+
+    private void recieptMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_recieptMouseEntered
+        reciept.setBackground(lightGray);
+    }//GEN-LAST:event_recieptMouseEntered
+
+    private void recieptMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_recieptMouseExited
+        reciept.setBackground(lightBlue);
+    }//GEN-LAST:event_recieptMouseExited
+
+    private void paidMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_paidMouseClicked
+         int selectedRow = overview.getSelectedRow();
+
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(null, "Please select a transaction to mark as paid.");
+        return;
+    }
+
+    Object transactionID = overview.getValueAt(selectedRow, 0); // Assuming ID is in column 0
+
+    int confirm = JOptionPane.showConfirmDialog(null, "Mark this transaction as PAID?", "Confirm", JOptionPane.YES_NO_OPTION);
+    if (confirm != JOptionPane.YES_OPTION) {
+        return;
+    }
+
+    try {
+        connectDB db = new connectDB();
+        String updateQuery = "UPDATE transactions SET status = 'Paid' WHERE t_id = ?";
+        PreparedStatement pst = db.connect.prepareStatement(updateQuery);
+        pst.setObject(1, transactionID);
+
+        int rowsAffected = pst.executeUpdate();
+
+        if (rowsAffected > 0) {
+            JOptionPane.showMessageDialog(null, "Transaction marked as PAID.");
+            // Optionally reload the table here
+        } else {
+            JOptionPane.showMessageDialog(null, "Failed to update transaction status.");
+        }
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+        e.printStackTrace();
+    }
+    }//GEN-LAST:event_paidMouseClicked
+
+    private void paidMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_paidMouseEntered
+        paid.setBackground(lightGray);
+    }//GEN-LAST:event_paidMouseEntered
+
+    private void paidMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_paidMouseExited
+        paid.setBackground(lightBlue);
+    }//GEN-LAST:event_paidMouseExited
+
+    private void refreshMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refreshMouseClicked
+        displayData();
+    }//GEN-LAST:event_refreshMouseClicked
+
+    private void refreshMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refreshMouseEntered
+        refresh.setBackground(lightGray);
+    }//GEN-LAST:event_refreshMouseEntered
+
+    private void refreshMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refreshMouseExited
+        refresh.setBackground(lightBlue);
+    }//GEN-LAST:event_refreshMouseExited
 
     private void accountMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_accountMouseClicked
-        
+        Account go = new Account();
+        go.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_accountMouseClicked
 
     private void accountMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_accountMouseEntered
@@ -471,9 +468,7 @@ if (confirm == JOptionPane.YES_OPTION) {
     }//GEN-LAST:event_areasMouseExited
 
     private void transactionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_transactionMouseClicked
-        Transactions go = new Transactions();
-        go.setVisible(true);
-        this.dispose();
+        
 
     }//GEN-LAST:event_transactionMouseClicked
 
@@ -516,20 +511,21 @@ if (confirm == JOptionPane.YES_OPTION) {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Account.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Transactions.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Account.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Transactions.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Account.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Transactions.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Account.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Transactions.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Account().setVisible(true);
+                new Transactions().setVisible(true);
             }
         });
     }
@@ -543,26 +539,24 @@ if (confirm == JOptionPane.YES_OPTION) {
     private javax.swing.JLabel admin4;
     private javax.swing.JLabel adminname;
     private javax.swing.JPanel areas;
-    private javax.swing.JPanel changepassword;
-    private javax.swing.JPanel changeprofile;
-    private javax.swing.JLabel cnum;
     private javax.swing.JPanel dashboard;
-    private javax.swing.JLabel email;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
-    private javax.swing.JLabel logout;
-    private javax.swing.JLabel name;
-    private javax.swing.JLabel profilepic;
-    private javax.swing.JLabel role;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable overview;
+    private javax.swing.JPanel paid;
+    private javax.swing.JPanel reciept;
+    private javax.swing.JPanel refresh;
     private javax.swing.JPanel transaction;
-    private javax.swing.JPanel updatequestion;
     private javax.swing.JPanel users;
     // End of variables declaration//GEN-END:variables
 }
