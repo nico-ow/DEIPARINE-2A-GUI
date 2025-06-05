@@ -263,7 +263,7 @@ public class TollierDB extends javax.swing.JFrame {
         loadingDialog.dispose();
 
         SwingUtilities.invokeLater(() -> {
-            Admin.Account go = new Admin.Account();
+            Account go = new Account();
             go.setVisible(true);
             this.dispose();
         });
