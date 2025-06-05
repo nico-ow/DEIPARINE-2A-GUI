@@ -5,6 +5,7 @@
  */
 package CRUD;
 
+import Admin.Account;
 import Admin.Users;
 import config.DBLogger;
 import config.connectDB;
@@ -355,7 +356,7 @@ public class ChangePass extends javax.swing.JFrame {
     }//GEN-LAST:event_refreshMouseExited
 
     private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
-        Users go = new Users();
+        Account go = new Account();
         go.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel4MouseClicked
