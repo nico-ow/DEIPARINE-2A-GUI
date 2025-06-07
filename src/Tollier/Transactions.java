@@ -434,39 +434,59 @@ public class Transactions extends javax.swing.JFrame {
     }//GEN-LAST:event_recieptMouseExited
 
     private void paidMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_paidMouseClicked
-         int selectedRow = overview.getSelectedRow();
+        int selectedRow = overview.getSelectedRow();
 
-    if (selectedRow == -1) {
-        JOptionPane.showMessageDialog(null, "Please select a transaction to mark as paid.");
-        return;
-    }
+if (selectedRow == -1) {
+    JOptionPane.showMessageDialog(null, "Please select a transaction to mark as paid.");
+    return;
+}
 
-    Object transactionID = overview.getValueAt(selectedRow, 0); // Assuming ID is in column 0
+Object transactionID = overview.getValueAt(selectedRow, 0);
 
-    int confirm = JOptionPane.showConfirmDialog(null, "Mark this transaction as PAID?", "Confirm", JOptionPane.YES_NO_OPTION);
-    if (confirm != JOptionPane.YES_OPTION) {
-        return;
-    }
+try {
+    connectDB db = new connectDB();
 
-    try {
-        connectDB db = new connectDB();
+    
+    String checkStatusQuery = "SELECT status FROM transactions WHERE t_id = ?";
+    PreparedStatement checkPst = db.connect.prepareStatement(checkStatusQuery);
+    checkPst.setObject(1, transactionID);
+    ResultSet rs = checkPst.executeQuery();
+
+    if (rs.next()) {
+        String currentStatus = rs.getString("status");
+
+        if ("Paid".equalsIgnoreCase(currentStatus)) {
+            JOptionPane.showMessageDialog(null, "This transaction is already marked as PAID.");
+            return;
+        }
+
+       
+        int confirm = JOptionPane.showConfirmDialog(null, "Mark this transaction as PAID?", "Confirm", JOptionPane.YES_NO_OPTION);
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        
         String updateQuery = "UPDATE transactions SET status = 'Paid' WHERE t_id = ?";
-        PreparedStatement pst = db.connect.prepareStatement(updateQuery);
-        pst.setObject(1, transactionID);
+        PreparedStatement updatePst = db.connect.prepareStatement(updateQuery);
+        updatePst.setObject(1, transactionID);
 
-        int rowsAffected = pst.executeUpdate();
+        int rowsAffected = updatePst.executeUpdate();
 
         if (rowsAffected > 0) {
             JOptionPane.showMessageDialog(null, "Transaction marked as PAID.");
-            // Optionally reload the table here
         } else {
             JOptionPane.showMessageDialog(null, "Failed to update transaction status.");
         }
 
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
-        e.printStackTrace();
+    } else {
+        JOptionPane.showMessageDialog(null, "Transaction not found.");
     }
+
+} catch (Exception e) {
+    JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+    e.printStackTrace();
+}
     }//GEN-LAST:event_paidMouseClicked
 
     private void paidMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_paidMouseEntered
