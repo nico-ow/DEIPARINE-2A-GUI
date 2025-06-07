@@ -24,15 +24,15 @@ import java.awt.Frame;
  * @author mendo
  */
 public class AddAccount extends javax.swing.JFrame {
-
-    /**
-     * Creates new form AddAccount
-     */
-    public AddAccount() {
-        initComponents();
-    }
+    
     Color lightGray = new Color(211, 211, 211);
     Color lightBlue = new Color(173, 216, 230);
+    public AddAccount() {
+        initComponents(); 
+        create.setBackground(lightBlue); 
+        
+    }
+    
      private boolean emailExists(String email) {
 
         connectDB con = new connectDB();

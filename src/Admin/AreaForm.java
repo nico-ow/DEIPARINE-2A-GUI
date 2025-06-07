@@ -23,9 +23,12 @@ public class AreaForm extends javax.swing.JFrame {
 
     Color lightGray = new Color(211, 211, 211);
     Color lightBlue = new Color(173, 216, 230);
-    public AreaForm() {
+   public AreaForm() {
         initComponents();
-        create.setBackground(lightBlue); 
+
+        
+        create.setOpaque(true);
+        create.setBackground(lightBlue);
     }
     
     
