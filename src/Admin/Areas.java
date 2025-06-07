@@ -462,25 +462,65 @@ try {
     private void deleteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteMouseClicked
        int selectedRow = overview.getSelectedRow();
 
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "Please select a row to delete.");
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(this, "Please select a row to delete.");
+        return;
+    }
+
+    String id = overview.getValueAt(selectedRow, 0).toString();
+
+    try {
+        connectDB con = new connectDB();
+
+        
+        String statusQuery = "SELECT a_status FROM area_tbl WHERE a_id = ?";
+        PreparedStatement checkPst = con.connect.prepareStatement(statusQuery);
+        checkPst.setString(1, id);
+        ResultSet rs = checkPst.executeQuery();
+
+        if (rs.next()) {
+            String status = rs.getString("a_status");
+
+            if ("Occupied".equalsIgnoreCase(status)) {
+                JOptionPane.showMessageDialog(this, "Cannot delete area. Status is currently 'Occupied'.");
+                return;
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Area not found.");
             return;
         }
 
+        
+        String transactionCheckQuery = "SELECT COUNT(*) AS count FROM transactions WHERE a_id = ?";
+        PreparedStatement checkTransPst = con.connect.prepareStatement(transactionCheckQuery);
+        checkTransPst.setString(1, id);
+        ResultSet transRs = checkTransPst.executeQuery();
+
+        if (transRs.next() && transRs.getInt("count") > 0) {
+            JOptionPane.showMessageDialog(this, "Cannot delete area. It is linked to existing transactions.");
+            return;
+        }
+
+        
         int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this record?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
-            String id = overview.getValueAt(selectedRow, 0).toString();
+            String deleteQuery = "DELETE FROM area_tbl WHERE a_id = ?";
+            PreparedStatement deletePst = con.connect.prepareStatement(deleteQuery);
+            deletePst.setString(1, id);
+            int affectedRows = deletePst.executeUpdate();
 
-            // Run SQL DELETE command here
-            connectDB con = new connectDB();
-            String query = "DELETE FROM area_tbl WHERE a_id = '" + id + "'";
-            
-            con.deleteData(query);
-            displayData();
-
-            JOptionPane.showMessageDialog(this, "Area deleted successfully.");
-        }               
+            if (affectedRows > 0) {
+                displayData(); 
+                JOptionPane.showMessageDialog(this, "Area deleted successfully.");
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to delete area.");
+            }
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        e.printStackTrace();
+    }
     }//GEN-LAST:event_deleteMouseClicked
 
     private void deleteMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteMouseEntered
