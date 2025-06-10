@@ -394,7 +394,7 @@ public class Account extends javax.swing.JFrame {
             window.dispose(); 
         }
 
-        
+       
         LoginPanel login = new LoginPanel();
         login.setVisible(true);
     }
